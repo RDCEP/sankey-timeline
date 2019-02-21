@@ -18,6 +18,9 @@
   }
   svg.append('g').attr('class', 'fuel elec');
 
+  // const N = 1;
+  // DATA = DATA.slice(N, N+2);
+
   // Sort data chronologically
   DATA.sort(function(a, b) {
     return a.year - b.year;
@@ -28,8 +31,6 @@
 
   // Build graph object with xy-coords for nodes
   let graphs = build_all_graphs(summary);
-
-  console.log(graphs);
 
   // Draw contents of graph object
   // Loop through fuel objects in graph object
@@ -51,6 +52,4 @@
   draw_boxes_right(svg, graphs[k].totals, summary.box_tops);
 
   build_animation(graphs, summary);
-  console.log(summary);
-
 })();

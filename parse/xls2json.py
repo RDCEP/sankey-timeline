@@ -29,10 +29,6 @@ class Excel2Json(object):
                                   # comm=0,
                                   ag=0, indus=0, trans=0)
                 for sector in self.sectors:
-                    # d['elec'][sector[0]] += float(self.df.loc[
-                    #     self.df['Label'] == fuel[1]].loc[
-                    #     self.df['Type'] == 'Electrical Generation',
-                    #     year].sum())
                     d[fuel[0]][sector[0]] += float(self.df.loc[
                               self.df['Label'] == fuel[1]].loc[
                               self.df['Type'] == sector[1], year].sum())
