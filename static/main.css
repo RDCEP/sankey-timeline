@@ -1,0 +1,24 @@
+.flow {
+  fill: none;
+  stroke-linejoin: round; }
+  .flow.elec {
+    stroke: #e49942; }
+  .flow.solar {
+    stroke: #fed530; }
+  .flow.nuclear {
+    stroke: #ca0813; }
+  .flow.hydro {
+    stroke: #0b24fb; }
+  .flow.wind {
+    stroke: #901d8f; }
+  .flow.geo {
+    stroke: #905a1c; }
+  .flow.gas {
+    stroke: #4cabf2; }
+  .flow.coal {
+    stroke: #000000; }
+  .flow.bio {
+    stroke: #46be48; }
+  .flow.petro {
+    stroke: #095f0b; }
+
