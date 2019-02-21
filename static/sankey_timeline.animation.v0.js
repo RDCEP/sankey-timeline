@@ -1,11 +1,16 @@
 const build_animation = function build_animation(graphs, summary) {
-  let t = d3.transition()
-    .ease(d3.easeLinear);
+  let d = 0;
+  let i = 1;
 
-  for (let i = 1; i < graphs.length; ++i) {
+  function animate_period() {
+    console.log(i);
+    let t = d3.transition()
+      .ease(d3.easeLinear);
+
     let n = graphs[i].year - graphs[i-1].year;
-    t.duration(n * 500);
-    
+    d = n * SPEED;
+    t.duration(d);
+
     graphs[i].graph.forEach(function(g) {
       d3.select('.flow.'+g.fuel+'.'+g.box)
         .transition(t)
@@ -30,5 +35,15 @@ const build_animation = function build_animation(graphs, summary) {
         .attr('y', summary.box_tops[BOXES[j].box])
         .attr('height', height);
     }
+
+    i++;
+
+    if (i < graphs.length) {
+      setTimeout(animate_period, d);
+    }
+
   }
+
+  animate_period();
+
 };
