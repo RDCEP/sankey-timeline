@@ -17,11 +17,11 @@ const get_totals = function get_totals() {
 
   for (let i = 0; i < DATA.length; ++i) {
     let total = { year: DATA[i].year,
-      elec: 0, res: 0, comm: 0, ag: 0, indus: 0, trans: 0,
+      elec: 0, res: 0, ag: 0, indus: 0, trans: 0,
       solar: 0, nuclear: 0, hydro: 0, wind: 0, geo: 0,
       gas: 0, coal: 0, bio: 0, petro: 0, fuel_height: 0 };
     let flow = { year: DATA[i].year,
-      elec: 0, res: 0, comm: 0, ag: 0, indus: 0, trans: 0 };
+      elec: 0, res: 0, ag: 0, indus: 0, trans: 0 };
     // Loop through fuels
     for (let j = 1; j < FUELS.length; ++j) {
       let fuel_name = FUELS[j].fuel;
@@ -64,8 +64,9 @@ const get_box_tops = function get_box_tops(summary) {
 
   let box_tops = {};
   box_tops.res = ELEC_BOX[1] + 30;
-  box_tops.comm = box_tops.res + summary.maxes.res * SCALE + RIGHT_GAP;
-  box_tops.ag = box_tops.comm + summary.maxes.comm * SCALE + RIGHT_GAP;
+  // box_tops.comm = box_tops.res + summary.maxes.res * SCALE + RIGHT_GAP;
+  // box_tops.ag = box_tops.comm + summary.maxes.comm * SCALE + RIGHT_GAP;
+  box_tops.ag = box_tops.res + summary.maxes.res * SCALE + RIGHT_GAP;
   box_tops.indus = box_tops.ag + summary.maxes.ag * SCALE + RIGHT_GAP;
   box_tops.trans = box_tops.indus + summary.maxes.indus * SCALE + RIGHT_GAP;
 
@@ -89,10 +90,13 @@ const graph_y = function graph_y(summary) {
     let boxes = [];
     // Track vertical offsets of fuel and electricity stacks
     let left_y = TOP_Y;
-    let elec_y = ELEC_BOX[1] - (DATA[i].elec.res + DATA[i].elec.comm +
+    let elec_y = ELEC_BOX[1] - (DATA[i].elec.res +
+      // DATA[i].elec.comm +
             DATA[i].elec.ag + DATA[i].elec.indus + DATA[i].elec.trans) * SCALE;
     let offsets = {
-      y: { elec: 0, res: 0, comm: 0, ag: 0, indus: 0, trans: 0 },
+      y: { elec: 0, res: 0,
+        // comm: 0,
+        ag: 0, indus: 0, trans: 0 },
       x: { solar: 0, nuclear: 0, hydro: 0, wind: 0, geo: 0,
         gas: 0, coal: 0, bio: 0, petro: 0 }
     };
@@ -257,7 +261,7 @@ const space_ups_and_downs = function space_ups_and_downs(graphs) {
         return g.box !== 'elec' ; })
       .forEach(function(g, j) {
         if (i === 0) {
-          console.log(g.fuel, g.box);
+          // console.log(g.fuel, g.box);
         }
         if (j === 0) { prev = g; return; }
         let path_gap = PATH_GAP * HSR3;
