@@ -21,14 +21,18 @@ class Excel2Json(object):
         json = []
         for year in self.years:
             d = dict(year=year,
-                     elec=dict(elec=0, res=0, comm=0, ag=0, indus=0, trans=0))
+                     elec=dict(elec=0, res=0,
+                               # comm=0,
+                               ag=0, indus=0, trans=0))
             for fuel in self.fuels:
-                d[fuel[0]] = dict(elec=0, res=0, comm=0, ag=0, indus=0, trans=0)
+                d[fuel[0]] = dict(elec=0, res=0,
+                                  # comm=0,
+                                  ag=0, indus=0, trans=0)
                 for sector in self.sectors:
-                    d['elec'][sector[0]] += float(self.df.loc[
-                        self.df['Label'] == fuel[1]].loc[
-                        self.df['Type'] == 'Electrical Generation',
-                        year].sum())
+                    # d['elec'][sector[0]] += float(self.df.loc[
+                    #     self.df['Label'] == fuel[1]].loc[
+                    #     self.df['Type'] == 'Electrical Generation',
+                    #     year].sum())
                     d[fuel[0]][sector[0]] += float(self.df.loc[
                               self.df['Label'] == fuel[1]].loc[
                               self.df['Type'] == sector[1], year].sum())
@@ -65,6 +69,7 @@ class Excel2Json(object):
             ['coal', 'Coal'],
             ['bio', 'Biomass'],
             ['petro', 'Petroleum'],
+            ['elec', 'Electricity'],
         ]
 
     @property
@@ -84,4 +89,4 @@ class Excel2Json(object):
 
 if __name__ == '__main__':
     j = Excel2Json()
-    j.write(2)
+    j.write(3)
