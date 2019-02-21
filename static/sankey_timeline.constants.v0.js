@@ -1,11 +1,12 @@
-const SCALE = 4;
+const SCALE = .02;
+const SPEED = 100;
 const HSR3 = Math.sqrt(3) / 2;
 const SR3 = Math.sqrt(3);
 
 
-const WIDTH = 1500;
+const WIDTH = 1200;
 const HEIGHT = WIDTH * 3 / 4;
-const ELEC_BOX = [700, 150];
+const ELEC_BOX = [450, 150];
 const ELEC_GAP = 20;
 const LEFT_X = 10;
 const TOP_Y = 100;
@@ -29,7 +30,7 @@ const BOX_GREY = '#cccccc';
 const BOXES = [
   { box: 'elec', color: BOX_GREY, name: 'Electricity' },
   { box: 'res', color: BOX_GREY, name: 'Residential' },
-  { box: 'comm', color: BOX_GREY, name: 'Commercial' },
+  // { box: 'comm', color: BOX_GREY, name: 'Commercial' },
   { box: 'ag', color: BOX_GREY, name: 'Agricultural' },
   { box: 'indus', color: BOX_GREY, name: 'Industrial' },
   { box: 'trans', color: BOX_GREY, name: 'Transportation' }
