@@ -3,7 +3,6 @@ const build_animation = function build_animation(graphs, summary) {
   let i = 1;
 
   function animate_period() {
-    console.log(i);
     let t = d3.transition()
       .ease(d3.easeLinear);
 

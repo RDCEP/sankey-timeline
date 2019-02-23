@@ -1,9 +1,6 @@
 (function() {
   'use strict';
 
-  // Reusable counter
-  let i = 0;
-  let j = 0;
   const k = 0;
   
   const svg = d3.select('.sankey')
@@ -18,9 +15,6 @@
   }
   svg.append('g').attr('class', 'fuel elec');
 
-  // const N = 1;
-  // DATA = DATA.slice(N, N+2);
-
   // Sort data chronologically
   DATA.sort(function(a, b) {
     return a.year - b.year;
@@ -34,7 +28,7 @@
 
   // Draw contents of graph object
   // Loop through fuel objects in graph object
-  for (i = 0; i < graphs[k].graph.length; ++i) {
+  for (let i = 0; i < graphs[k].graph.length; ++i) {
     // Loop through boxes
     // Suppress paths without nodes FIXME: this is only for testing
     if (graphs[k].graph[i].b.x === null) {
@@ -52,4 +46,8 @@
   draw_boxes_right(svg, graphs[k].totals, summary.box_tops);
 
   build_animation(graphs, summary);
+
+  console.log(graphs);
+  console.log(summary);
+
 })();
