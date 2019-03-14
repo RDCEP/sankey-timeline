@@ -1,19 +1,20 @@
 const SCALE = .02;
-const SPEED = 100;
+const SPEED = 200;
 const HSR3 = Math.sqrt(3) / 2;
 const SR3 = Math.sqrt(3);
 
+const BLEED = .5;
 
 const WIDTH = 1200;
 const HEIGHT = WIDTH * 3 / 4;
-const ELEC_BOX = [450, 150];
+const ELEC_BOX = [500, 170];
 const ELEC_GAP = 20;
 const LEFT_X = 10;
 const TOP_Y = 100;
 const LEFT_GAP = 30;
 const PATH_GAP = 20;
 const RIGHT_GAP = LEFT_GAP * 2;
-const BOX_WIDTH = 200;
+const BOX_WIDTH = 180;
 const FUELS = [
   {fuel: 'elec', color: '#e49942', name: 'Electricity' },
   {fuel: 'solar', color: '#fed530', name: 'Solar' },
@@ -29,7 +30,7 @@ const FUELS = [
 const BOX_GREY = '#cccccc';
 const BOXES = [
   { box: 'elec', color: BOX_GREY, name: 'Electricity' },
-  { box: 'res', color: BOX_GREY, name: 'Residential' },
+  { box: 'res', color: BOX_GREY, name: 'Residential/Commercial' },
   // { box: 'comm', color: BOX_GREY, name: 'Commercial' },
   { box: 'ag', color: BOX_GREY, name: 'Agricultural' },
   { box: 'indus', color: BOX_GREY, name: 'Industrial' },

@@ -1,0 +1,59 @@
+text {
+  font-family: Futura, sans-serif; }
+
+.flow {
+  fill: none;
+  stroke-linejoin: round; }
+  .flow.elec {
+    stroke: #e49942; }
+  .flow.solar {
+    stroke: #fed530; }
+  .flow.nuclear {
+    stroke: #ca0813; }
+  .flow.hydro {
+    stroke: #0b24fb; }
+  .flow.wind {
+    stroke: #901d8f; }
+  .flow.geo {
+    stroke: #905a1c; }
+  .flow.gas {
+    stroke: #4cabf2; }
+  .flow.coal {
+    stroke: #000000; }
+  .flow.bio {
+    stroke: #46be48; }
+  .flow.petro {
+    stroke: #095f0b; }
+
+.box.sector {
+  fill: #cccccc; }
+.box.solar {
+  fill: #fed530; }
+.box.nuclear {
+  fill: #ca0813; }
+.box.hydro {
+  fill: #0b24fb; }
+.box.wind {
+  fill: #901d8f; }
+.box.geo {
+  fill: #905a1c; }
+.box.gas {
+  fill: #4cabf2; }
+.box.coal {
+  fill: #000000; }
+.box.bio {
+  fill: #46be48; }
+.box.petro {
+  fill: #095f0b; }
+
+.title {
+  font-size: 1em; }
+  .title .year {
+    font-size: 2em;
+    font-weight: bold;
+    clear: left; }
+
+.hidden {
+  visibility: hidden; }
+
+/*# sourceMappingURL=main.css.map */

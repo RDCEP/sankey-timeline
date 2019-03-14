@@ -15,6 +15,7 @@ const get_totals = function get_totals() {
 
   let flows = [];
 
+  // Loop through years
   for (let i = 0; i < DATA.length; ++i) {
     let total = { year: DATA[i].year,
       elec: 0, res: 0, ag: 0, indus: 0, trans: 0,
@@ -23,6 +24,7 @@ const get_totals = function get_totals() {
     let flow = { year: DATA[i].year,
       elec: 0, res: 0, ag: 0, indus: 0, trans: 0 };
     // Loop through fuels
+    // Skip electricity
     for (let j = 1; j < FUELS.length; ++j) {
       let fuel_name = FUELS[j].fuel;
       let fuel_obj = DATA[i][fuel_name];
@@ -44,7 +46,6 @@ const get_totals = function get_totals() {
     totals.push(total);
     flows.push(flow);
   }
-
   return {totals: totals, flows: flows};
 };
 
@@ -64,8 +65,6 @@ const get_box_tops = function get_box_tops(summary) {
 
   let box_tops = {};
   box_tops.res = ELEC_BOX[1] + 30;
-  // box_tops.comm = box_tops.res + summary.maxes.res * SCALE + RIGHT_GAP;
-  // box_tops.ag = box_tops.comm + summary.maxes.comm * SCALE + RIGHT_GAP;
   box_tops.ag = box_tops.res + summary.maxes.res * SCALE + RIGHT_GAP;
   box_tops.indus = box_tops.ag + summary.maxes.ag * SCALE + RIGHT_GAP;
   box_tops.trans = box_tops.indus + summary.maxes.indus * SCALE + RIGHT_GAP;
@@ -88,14 +87,13 @@ const graph_y = function graph_y(summary) {
   for (let i = 0; i < DATA.length; ++i) {
     let graph = [];
     let boxes = [];
+
     // Track vertical offsets of fuel and electricity stacks
     let left_y = TOP_Y;
-    let elec_y = ELEC_BOX[1] - (DATA[i].elec.res +
-      // DATA[i].elec.comm +
-            DATA[i].elec.ag + DATA[i].elec.indus + DATA[i].elec.trans) * SCALE;
+    let elec_y = ELEC_BOX[1] - (DATA[i].elec.res + DATA[i].elec.ag +
+      DATA[i].elec.indus + DATA[i].elec.trans) * SCALE;
     let offsets = {
       y: { elec: 0, res: 0,
-        // comm: 0,
         ag: 0, indus: 0, trans: 0 },
       x: { solar: 0, nuclear: 0, hydro: 0, wind: 0, geo: 0,
         gas: 0, coal: 0, bio: 0, petro: 0 }
@@ -152,13 +150,14 @@ const graph_y = function graph_y(summary) {
           g.b.y = g.a.y;
           // Distinguish between electricity box and right-side boxes.
           if (BOX_NAMES[k] === 'elec') {
-            // Increment y -offset for electricity box
+            // Increment y-offset for electricity box
             g.d.x = ELEC_BOX[0];
             g.d.y = (ELEC_BOX[1] -
               totals.elec * SCALE + offsets.y.elec);
+
             g.c.x = (ELEC_BOX[0] - 20 -
               (totals.elec * SCALE - offsets.y.elec) / SR3 -
-              (flows.elec - 1 - j) * PATH_GAP * HSR3);
+              (FUELS.length - j) * PATH_GAP);
             g.b.x = (g.c.x - Math.abs(g.a.y - g.d.y) /
               SR3);
           } else {
@@ -188,6 +187,7 @@ const graph_y = function graph_y(summary) {
     graphs.push({ graph: graph, offsets: offsets, year: DATA[i].year,
       totals: totals, flows: flows });
   }
+
   return graphs;
 };
 
@@ -280,13 +280,15 @@ const space_ups_and_downs = function space_ups_and_downs(graphs) {
       function (o) {
         return o.cc.x;
       }));
-    graphs[i].graph.forEach(function(g) {
-      let diff = max_cc - (WIDTH - BOX_WIDTH - 50)
-      g.c.x -= diff;
-      g.b.x -= diff;
-    });
+    graphs[i].graph
+      .filter(function(g) {
+        return g.box !== 'elec'; })
+      .forEach(function(g) {
+        let diff = max_cc - (WIDTH - BOX_WIDTH - 50);
+        g.c.x -= diff;
+        g.b.x -= diff;
+      });
   }
-
   return graphs;
 };
 
@@ -298,8 +300,15 @@ let draw_boxes_left = function draw_boxes_left(svg, totals) {
       .attr('y', top)
       .attr('width', BOX_WIDTH)
       .attr('height', totals[FUELS[i].fuel] * SCALE)
-      .attr('fill', BOX_GREY)
-      .attr('class', 'box '+FUELS[i].fuel);
+      .attr('class', 'box fuel '+FUELS[i].fuel);
+    svg.append('text')
+      .text(FUELS[i].name)
+      .attr('x', LEFT_X)
+      .attr('y', top - 5)
+      .attr('class', 'box label '+FUELS[i].fuel)
+      .classed('hidden', function() {
+        return totals[FUELS[i].fuel] === 0;
+      });
     top += totals[FUELS[i].fuel] * SCALE + LEFT_GAP;
   }
 };
@@ -316,14 +325,40 @@ let draw_boxes_right = function draw_boxes_right(svg, totals, boxtops) {
         .attr('y', y)
         .attr('width', BOX_WIDTH)
         .attr('height', totals[box.box] * SCALE)
-        .attr('fill', BOX_GREY)
-        .attr('class', 'box '+box.box);
+        .attr('class', 'box sector '+box.box);
     svg.append('text')
-      .text(box.name)
+      .text(function() {
+        if (box.box === 'res') { return 'Residential'; }
+        return box.name;
+      })
       .attr('x', x)
       .attr('y', y - 5)
-      .attr('class', 'box label');
+      .attr('dy', function() {if (box.box === 'res') { return '-1em'; } })
+      .attr('class', 'label '+box.box)
+      .classed('hidden', function() { return totals[box.box] === 0; })
+      .classed('fuel', function() { return box.box === 'elec'; })
+      .append('tspan')
+      .text(function() {
+        if (box.box === 'res') {
+          return '/Commercial';
+        }
+      })
+      .attr('x', x)
+      .attr('y', y - 5);
   });
+};
+
+let draw_title = function draw_title(svg) {
+  svg.append('text')
+    .text('US energy usage per capita in ')
+    .attr('x', ELEC_BOX[0])
+    .attr('y', '1em')
+    .attr('class', 'title')
+    .append('tspan')
+    .attr('x', ELEC_BOX[0])
+    .attr('y', '1.5em')
+    .attr('class', 'year')
+    .text(DATA[0].year)
 };
 
 let sort_graph_up = function sort_graph_up(a, b) {

@@ -19,6 +19,7 @@
   DATA.sort(function(a, b) {
     return a.year - b.year;
   });
+  DATA = DATA.slice(-1, );
 
   // Summary information
   let summary = get_summary();
@@ -44,10 +45,12 @@
 
   draw_boxes_left(svg, graphs[k].totals);
   draw_boxes_right(svg, graphs[k].totals, summary.box_tops);
+  draw_title(svg);
 
-  build_animation(graphs, summary);
+  // build_animation(graphs, summary);
 
-  console.log(graphs);
-  console.log(summary);
+  // console.log(graphs);
+  // console.log(summary);
+  // console.log(build_graphs(summary));
 
 })();

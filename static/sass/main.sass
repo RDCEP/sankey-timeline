@@ -1,0 +1,69 @@
+$elec: #e49942
+$solar: #fed530
+$nuclear: #ca0813
+$hydro: #0b24fb
+$wind: #901d8f
+$geo: #905a1c
+$gas: #4cabf2
+$coal: #000000
+$bio: #46be48
+$petro: #095f0b
+$grey: #cccccc
+
+text
+  font-family: Futura, sans-serif
+
+.flow
+  fill: none
+  stroke-linejoin: round
+  &.elec
+    stroke: $elec
+  &.solar
+    stroke: $solar
+  &.nuclear
+    stroke: $nuclear
+  &.hydro
+    stroke: $hydro
+  &.wind
+    stroke: $wind
+  &.geo
+    stroke: $geo
+  &.gas
+    stroke: $gas
+  &.coal
+    stroke: $coal
+  &.bio
+    stroke: $bio
+  &.petro
+    stroke: $petro
+.box
+  &.sector
+    fill: $grey
+  &.solar
+    fill: $solar
+  &.nuclear
+    fill: $nuclear
+  &.hydro
+    fill: $hydro
+  &.wind
+    fill: $wind
+  &.geo
+    fill: $geo
+  &.gas
+    fill: $gas
+  &.coal
+    fill: $coal
+  &.bio
+    fill: $bio
+  &.petro
+    fill: $petro
+
+.title
+  font-size: 1em
+  .year
+    font-size: 2em
+    font-weight: bold
+    clear: left
+
+.hidden
+  visibility: hidden
