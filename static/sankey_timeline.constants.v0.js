@@ -2,9 +2,7 @@ const SCALE = .02;
 const SPEED = 200;
 const HSR3 = Math.sqrt(3) / 2;
 const SR3 = Math.sqrt(3);
-
 const BLEED = .5;
-
 const WIDTH = 1200;
 const HEIGHT = WIDTH * 3 / 4;
 const ELEC_BOX = [500, 170];
@@ -13,8 +11,8 @@ const LEFT_X = 10;
 const TOP_Y = 100;
 const LEFT_GAP = 30;
 const PATH_GAP = 20;
-const RIGHT_GAP = LEFT_GAP * 2;
-const BOX_WIDTH = 180;
+const RIGHT_GAP = LEFT_GAP * 2.1;
+const BOX_WIDTH = 120;
 const FUELS = [
   {fuel: 'elec', color: '#e49942', name: 'Electricity' },
   {fuel: 'solar', color: '#fed530', name: 'Solar' },
@@ -38,29 +36,28 @@ const BOXES = [
 ];
 const FUEL_NAMES = FUELS.map(d => d.fuel);
 const BOX_NAMES = BOXES.map(d => d.box);
-const FLOW_ORDER = [
-  ['elec', 'res'],
-  ['solar ', 'res'],
-  ['petro', 'trans'],
-  ['nuclear', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-  ['elec', 'res'],
-]
+const FLOW_ORDER = {
+  ups: {
+    origin: ['petro', 'res'],
+    right: [],
+    left: []
+  },
+  downs: {
+    origin: ['elec', 'trans'],
+    right: [
+      ['elec', 'indus'],
+      ['elec', 'ag'],
+      ['elec', 'res'],
+      ['elec', 'indus'],
+    ],
+    left: [
+      ['hydro', 'indus'],
+      ['wind', 'ag'],
+      ['gas', 'indus'],
+      ['gas', 'trans'],
+      ['coal', 'indus'],
+      ['coal', 'trans'],
+      ['petro', 'trans'],
+    ]
+  }
+};

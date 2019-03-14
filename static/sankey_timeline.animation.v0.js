@@ -8,6 +8,9 @@ const build_animation = function build_animation(graphs, summary) {
       .ease(d3.easeLinear)
       .duration(d);
 
+    /**
+     * Restroke each flow
+     */
     graphs[i].graph.forEach(function(g) {
       d3.select('.flow.'+g.fuel+'.'+g.box)
         .transition(t)
@@ -22,6 +25,9 @@ const build_animation = function build_animation(graphs, summary) {
 
     let top = TOP_Y;
 
+    /**
+     * Resize input boxes
+     */
     for (let j = 1; j < FUELS.length; ++j) {
       let height = summary.totals[i][FUELS[j].fuel] * SCALE;
       d3.select('.box.'+FUELS[j].fuel)
@@ -48,7 +54,7 @@ const build_animation = function build_animation(graphs, summary) {
       top += height + LEFT_GAP;
     }
 
-    let elec_total = summary.totals[i].elec
+    let elec_total = summary.totals[i].elec;
     d3.select('.box.elec')
       .transition(t)
       .attr('y', ELEC_BOX[1] - elec_total * SCALE)
@@ -59,7 +65,13 @@ const build_animation = function build_animation(graphs, summary) {
       })
       .transition(t)
       .attr('y', ELEC_BOX[1] - elec_total * SCALE - 5);
+    d3.select('.total')
+      .transition(t)
+      .attr('y', ELEC_BOX[1] - elec_total * SCALE - 5);
 
+    /**
+     * Update heights of output boxes
+     */
     for (let j = 1; j < BOXES.length; ++j) {
       let height = summary.totals[i][BOXES[j].box] * SCALE;
       d3.select('.box.'+BOXES[j].box)
@@ -68,7 +80,7 @@ const build_animation = function build_animation(graphs, summary) {
         .attr('height', height);
     }
 
-    d3.select('.title.year')
+    d3.select('.year')
       .transition(t)
       .tween('text', function() {
         let self = this;
@@ -76,6 +88,18 @@ const build_animation = function build_animation(graphs, summary) {
         let b = graphs[i].year;
         return function(t) {
             self.textContent = Math.round(a + (b - a) * t);
+        };
+      });
+
+    d3.selectAll('.total.sector')
+      .transition(t)
+      .tween('text', function() {
+        let that = this;
+        console.log(graphs[i].totals[that.getAttribute('data-sector')]);
+        let a = parseInt(that.textContent);
+        let b = graphs[i].totals[that.getAttribute('data-sector')];
+        return function(t) {
+            that.textContent = sigfig2(Math.round(a + (b - a) * t));
         };
       });
 

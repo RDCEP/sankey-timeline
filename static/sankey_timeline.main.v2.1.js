@@ -1,8 +1,9 @@
 (function() {
   'use strict';
 
+  // const k = DATA.length - 10;
   const k = 0;
-  
+
   const svg = d3.select('.sankey')
     .append('svg')
     .attr('width', WIDTH)
@@ -19,7 +20,7 @@
   DATA.sort(function(a, b) {
     return a.year - b.year;
   });
-  DATA = DATA.slice(-1, );
+  // DATA = DATA.slice(-1, );
 
   // Summary information
   let summary = get_summary();
@@ -39,7 +40,12 @@
     svg.select('.fuel.'+graphs[k].graph[i].fuel)
       .append('path')
       .attr('d', line(parse_line(graphs[k].graph[i])))
-      .attr('stroke-width', graphs[k].graph[i].stroke)
+      .attr('stroke-width', function() {
+          if (graphs[k].graph[i].stroke > 0) {
+            return graphs[k].graph[i].stroke+BLEED;
+          }
+          return 0;
+        })
       .attr('class', 'flow '+graphs[k].graph[i].fuel+' '+graphs[k].graph[i].box)
   }
 
@@ -47,9 +53,9 @@
   draw_boxes_right(svg, graphs[k].totals, summary.box_tops);
   draw_title(svg);
 
-  // build_animation(graphs, summary);
+  build_animation(graphs, summary);
 
-  // console.log(graphs);
+  console.log(graphs);
   // console.log(summary);
   // console.log(build_graphs(summary));
 

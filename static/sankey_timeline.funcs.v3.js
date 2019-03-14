@@ -1,75 +1,5 @@
-
-
-const get_summary = function get_summary() {
-
-  let summary = get_totals();
-  summary.maxes = get_maxes(summary);
-  summary.box_tops = get_box_tops(summary);
-  return summary;
-
-};
-
-const get_totals = function get_totals() {
-
-  let totals = [];
-
-  let flows = [];
-
-  // Loop through years
-  for (let i = 0; i < DATA.length; ++i) {
-    let total = { year: DATA[i].year,
-      elec: 0, res: 0, ag: 0, indus: 0, trans: 0,
-      solar: 0, nuclear: 0, hydro: 0, wind: 0, geo: 0,
-      gas: 0, coal: 0, bio: 0, petro: 0, fuel_height: 0 };
-    let flow = { year: DATA[i].year,
-      elec: 0, res: 0, ag: 0, indus: 0, trans: 0 };
-    // Loop through fuels
-    // Skip electricity
-    for (let j = 1; j < FUELS.length; ++j) {
-      let fuel_name = FUELS[j].fuel;
-      let fuel_obj = DATA[i][fuel_name];
-      // Loop through boxes
-      for (let k = 0; k < BOX_NAMES.length; ++k) {
-          // Increment the amount of flows to the box
-          if (fuel_obj[BOX_NAMES[k]] > 0) { flow[BOX_NAMES[k]]++; }
-          // Add to the box's total
-          total[BOX_NAMES[k]] += fuel_obj[BOX_NAMES[k]];
-          total[fuel_name] += fuel_obj[BOX_NAMES[k]];
-          // FIXME: This is a crummy way to add electricity into
-          //  the right-hand boxes.
-          if (j === 1 && BOX_NAMES[k] !== 'elec') {
-            total[BOX_NAMES[k]] += DATA[i].elec[BOX_NAMES[k]];
-          }
-      }
-      total.fuel_height += total[fuel_name] * SCALE + LEFT_GAP;
-    }
-    totals.push(total);
-    flows.push(flow);
-  }
-  return {totals: totals, flows: flows};
-};
-
-const get_maxes = function get_maxes(summary) {
-  let maxes = {};
-
-  for (let i = 0; i < BOXES.length; ++i) {
-    maxes[BOXES[i].box] = Math.max.apply(Math, summary.totals.map(
-      function (o) {
-        return o[BOXES[i].box];
-      }));
-  }
-  return maxes;
-};
-
-const get_box_tops = function get_box_tops(summary) {
-
-  let box_tops = {};
-  box_tops.res = ELEC_BOX[1] + 30;
-  box_tops.ag = box_tops.res + summary.maxes.res * SCALE + RIGHT_GAP;
-  box_tops.indus = box_tops.ag + summary.maxes.ag * SCALE + RIGHT_GAP;
-  box_tops.trans = box_tops.indus + summary.maxes.indus * SCALE + RIGHT_GAP;
-
-  return box_tops;
+const sigfig2 = function sigfig2(n) {
+  return Number.parseFloat(n.toPrecision(2));
 };
 
 const build_all_graphs = function build_all_graphs(summary) {
@@ -148,6 +78,7 @@ const graph_y = function graph_y(summary) {
           // Position starting node
           g.stroke = half_stroke * 2;
           g.b.y = g.a.y;
+
           // Distinguish between electricity box and right-side boxes.
           if (BOX_NAMES[k] === 'elec') {
             // Increment y-offset for electricity box
@@ -292,75 +223,6 @@ const space_ups_and_downs = function space_ups_and_downs(graphs) {
   return graphs;
 };
 
-let draw_boxes_left = function draw_boxes_left(svg, totals) {
-  let top = TOP_Y;
-  for (let i = 1; i < FUELS.length; ++i) {
-    svg.append('rect')
-      .attr('x', LEFT_X)
-      .attr('y', top)
-      .attr('width', BOX_WIDTH)
-      .attr('height', totals[FUELS[i].fuel] * SCALE)
-      .attr('class', 'box fuel '+FUELS[i].fuel);
-    svg.append('text')
-      .text(FUELS[i].name)
-      .attr('x', LEFT_X)
-      .attr('y', top - 5)
-      .attr('class', 'box label '+FUELS[i].fuel)
-      .classed('hidden', function() {
-        return totals[FUELS[i].fuel] === 0;
-      });
-    top += totals[FUELS[i].fuel] * SCALE + LEFT_GAP;
-  }
-};
-
-let draw_boxes_right = function draw_boxes_right(svg, totals, boxtops) {
-  BOXES.forEach(function(box) {
-    let x = WIDTH - BOX_WIDTH;
-    let y = boxtops[box.box];
-    if (box.box === 'elec') {
-      x = ELEC_BOX[0];
-      y = ELEC_BOX[1] - totals.elec * SCALE; }
-    svg.append('rect')
-        .attr('x', x)
-        .attr('y', y)
-        .attr('width', BOX_WIDTH)
-        .attr('height', totals[box.box] * SCALE)
-        .attr('class', 'box sector '+box.box);
-    svg.append('text')
-      .text(function() {
-        if (box.box === 'res') { return 'Residential'; }
-        return box.name;
-      })
-      .attr('x', x)
-      .attr('y', y - 5)
-      .attr('dy', function() {if (box.box === 'res') { return '-1em'; } })
-      .attr('class', 'label '+box.box)
-      .classed('hidden', function() { return totals[box.box] === 0; })
-      .classed('fuel', function() { return box.box === 'elec'; })
-      .append('tspan')
-      .text(function() {
-        if (box.box === 'res') {
-          return '/Commercial';
-        }
-      })
-      .attr('x', x)
-      .attr('y', y - 5);
-  });
-};
-
-let draw_title = function draw_title(svg) {
-  svg.append('text')
-    .text('US energy usage per capita in ')
-    .attr('x', ELEC_BOX[0])
-    .attr('y', '1em')
-    .attr('class', 'title')
-    .append('tspan')
-    .attr('x', ELEC_BOX[0])
-    .attr('y', '1.5em')
-    .attr('class', 'year')
-    .text(DATA[0].year)
-};
-
 let sort_graph_up = function sort_graph_up(a, b) {
   if (BOX_NAMES.indexOf(a.box) < BOX_NAMES.indexOf(b.box)) { return 1; }
   if (BOX_NAMES.indexOf(a.box) > BOX_NAMES.indexOf(b.box)) { return -1; }
@@ -377,11 +239,4 @@ let sort_graph_down = function sort_graph_down(a, b) {
   return 0;
 };
 
-const parse_line = function(obj) {
-  return [obj.a, obj.b, obj.c, obj.d];
-};
-
-const line = d3.line()
-  .x(function(d) { return d.x; })
-  .y(function(d) { return d.y; });
 
