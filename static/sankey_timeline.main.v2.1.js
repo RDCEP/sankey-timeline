@@ -4,7 +4,7 @@
   // const k = DATA.length - 10;
   const k = 0;
 
-  const svg = d3.select('.sankey')
+  let svg = d3.select('.sankey.container')
     .append('svg')
     .attr('width', WIDTH)
     .attr('height', HEIGHT);
@@ -51,6 +51,16 @@
 
   draw_boxes_left(svg, graphs[k].totals);
   draw_boxes_right(svg, graphs[k].totals, summary.box_tops);
+
+  svg = d3.select('.title.container')
+    .style('width', WIDTH+'px')
+    .style('height', 50+'px')
+    .append('svg')
+    .attr('width', WIDTH)
+    .attr('height', 50);
+
+
+
   draw_title(svg);
 
   build_animation(graphs, summary);

@@ -93,7 +93,7 @@ const get_maxes = function get_maxes(summary) {
 const get_box_tops = function get_box_tops(summary) {
 
   let box_tops = {};
-  box_tops.res = ELEC_BOX[1] + 30;
+  box_tops.res = ELEC_BOX[1] + 50;
   box_tops.ag = box_tops.res + summary.maxes.res * SCALE + RIGHT_GAP;
   box_tops.indus = box_tops.ag + summary.maxes.ag * SCALE + RIGHT_GAP;
   box_tops.trans = box_tops.indus + summary.maxes.indus * SCALE + RIGHT_GAP;

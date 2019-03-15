@@ -8,9 +8,10 @@ $gas: #4cabf2
 $coal: #000000
 $bio: #46be48
 $petro: #095f0b
-$grey: #cccccc
+$greybox: #cccccc
+$greytext: #b2b2b2
 
-*
+text
   font-family: Fieldwork, Futura, sans-serif
 
 .flow
@@ -38,7 +39,7 @@ $grey: #cccccc
     stroke: $petro
 .box
   &.sector
-    fill: $grey
+    fill: $greybox
   &.solar
     fill: $solar
   &.nuclear
@@ -60,18 +61,32 @@ $grey: #cccccc
 
 .bkgd
   fill: #000000
-.title
-  font-size: 1em
-  fill: black
-  .unit
-    font-size: .7em
-    font-weight: bold
-  .year
-    font-size: 2.1em
-    font-weight: bold
-    clear: left
-    letter-spacing: .05em
-    font-variant-numeric: tabular-nums
+.title.container
+  border-top: 2px solid $greytext
+  border-bottom: 1px solid $greytext
+  position: relative
+  img
+    height: 40px
+    position: absolute
+    top: 5px
+  svg
+    position: absolute
+  .title
+    font-size: 1em
+    fill: black
+    .unit
+      font-size: .7em
+      font-weight: bold
+    .year
+      font-size: 2.1em
+      font-weight: bold
+      clear: left
+      letter-spacing: .05em
+      font-variant-numeric: tabular-nums
+  .citation, .affiliation
+    font-family: Fieldwork-HumThin, Futura, sans-serif
+    font-size: .9em
+    fill: $greytext
 .total.sector
   font-size: .7em
   font-weight: bold

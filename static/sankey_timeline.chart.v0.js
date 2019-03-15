@@ -4,21 +4,11 @@
  */
 let draw_title = function draw_title(svg) {
 
-  svg.append('rect')
-    .attr('width', WIDTH)
-    .attr('height', '2px')
-    .attr('class', 'bkgd');
-  svg.append('rect')
-    .attr('width', WIDTH)
-    .attr('height', '1px')
-    .attr('y', '2.5em')
-    .attr('class', 'bkgd');
-
   let svg_title = svg.append('text')
     .text('US energy usage in ')
     .attr('text-anchor', 'end')
     .attr('x', ELEC_BOX[0] - 5)
-    .attr('y', '1.2em')
+    .attr('y', '1.4em')
     .attr('class', 'title');
 
   svg_title.append('tspan')
@@ -33,8 +23,25 @@ let draw_title = function draw_title(svg) {
     .attr('text-anchor', 'start')
     .attr('x', ELEC_BOX[0])
     .attr('dy', '0em')
-    .attr('class', 'year')
+    .attr('class', 'year');
 
+  svg.append('text')
+    .text('Suits, Matteson, and Moyer, 2019.')
+    .attr('x', ELEC_BOX[0] + BOX_WIDTH)
+    .attr('y', '1.5em')
+    .attr('class', 'citation')
+
+  svg.append('text')
+    .text('University of Chicago. Center for Robust ')
+    .attr('x', ELEC_BOX[0] + BOX_WIDTH + (WIDTH -
+      (ELEC_BOX[0] + BOX_WIDTH)) / 2 - 25)
+    .attr('y', '1.5em')
+    .attr('class', 'affiliation')
+    .append('tspan')
+    .text('Decision-making on Climate and Energy Policy.')
+    .attr('x', ELEC_BOX[0] + BOX_WIDTH + (WIDTH -
+      (ELEC_BOX[0] + BOX_WIDTH)) / 2 - 25)
+    .attr('dy', '1em')
 };
 
 /**
