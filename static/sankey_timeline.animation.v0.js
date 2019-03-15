@@ -28,20 +28,6 @@ const build_animation = function build_animation(graphs, summary) {
      */
     for (let j = 1; j < FUELS.length; ++j) {
       let height = summary.totals[i][FUELS[j].fuel] * SCALE;
-      d3.select('.box.'+FUELS[j].fuel)
-        .transition(t)
-        .attr('y', function() {
-          if (summary.totals[i][FUELS[j].fuel] > 0) {
-            return top - BLEED / 2;
-          }
-          return top;
-        })
-        .attr('height', function() {
-          if (summary.totals[i][FUELS[j].fuel] > 0) {
-            return height + BLEED;
-          }
-          return height;
-        });
       /**
        * Hide empty flows and adjust flows' vertical positions
        */

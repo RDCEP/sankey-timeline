@@ -71,7 +71,7 @@ const graph_y = function graph_y(summary) {
           } else {
             left_y += half_stroke;
             g.a.y = left_y;
-            g.a.x = LEFT_X + BOX_WIDTH;
+            g.a.x = LEFT_X;
 
           }
           offsets.y[BOX_NAMES[k]] += half_stroke;

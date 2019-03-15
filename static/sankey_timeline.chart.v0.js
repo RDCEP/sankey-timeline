@@ -67,17 +67,6 @@ let draw_title = function draw_title(svg) {
 let draw_boxes_left = function draw_boxes_left(svg, totals) {
   let top = TOP_Y;
   for (let i = 1; i < FUELS.length; ++i) {
-    svg.append('rect')
-      .attr('x', LEFT_X)
-      .attr('y', top)
-      .attr('width', BOX_WIDTH)
-      .attr('height', function() {
-        if (totals[FUELS[i].fuel] > 0) {
-          return totals[FUELS[i].fuel] * SCALE + BLEED;
-        }
-        return 0;
-      })
-      .attr('class', 'box fuel '+FUELS[i].fuel);
     svg.append('text')
       .text(FUELS[i].name)
       .attr('x', LEFT_X)
