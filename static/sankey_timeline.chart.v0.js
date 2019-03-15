@@ -4,6 +4,9 @@
  */
 let draw_title = function draw_title(svg) {
 
+  /**
+   * Draw title of graph.
+   */
   let svg_title = svg.append('text')
     .text('US energy usage in ')
     .attr('text-anchor', 'end')
@@ -11,6 +14,9 @@ let draw_title = function draw_title(svg) {
     .attr('y', '1.4em')
     .attr('class', 'title');
 
+  /**
+   * Draw units of graph.
+   */
   svg_title.append('tspan')
     .text('(Watts per capita)')
     .attr('text-anchor', 'end')
@@ -18,6 +24,9 @@ let draw_title = function draw_title(svg) {
     .attr('dy', '1.2em')
     .attr('class', 'unit');
 
+  /**
+   * Draw year.
+   */
   svg_title.append('tspan')
     .text(DATA[0].year)
     .attr('text-anchor', 'start')
@@ -25,12 +34,18 @@ let draw_title = function draw_title(svg) {
     .attr('dy', '0em')
     .attr('class', 'year');
 
+  /**
+   * Draw citation info.
+   */
   svg.append('text')
     .text('Suits, Matteson, and Moyer, 2019.')
     .attr('x', ELEC_BOX[0] + BOX_WIDTH)
     .attr('y', '1.5em')
     .attr('class', 'citation')
 
+  /**
+   * Draw affiliations.
+   */
   svg.append('text')
     .text('University of Chicago. Center for Robust ')
     .attr('x', ELEC_BOX[0] + BOX_WIDTH + (WIDTH -
