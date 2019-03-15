@@ -3,16 +3,38 @@
  * @param svg
  */
 let draw_title = function draw_title(svg) {
-  svg.append('text')
-    .text('US energy usage (W/capita) in ')
-    .attr('x', ELEC_BOX[0])
-    .attr('y', '1em')
-    .attr('class', 'title')
-    .append('tspan')
-    .attr('x', ELEC_BOX[0])
-    .attr('y', '1.5em')
-    .attr('class', 'year')
+
+  svg.append('rect')
+    .attr('width', WIDTH)
+    .attr('height', '2px')
+    .attr('class', 'bkgd');
+  svg.append('rect')
+    .attr('width', WIDTH)
+    .attr('height', '1px')
+    .attr('y', '2.5em')
+    .attr('class', 'bkgd');
+
+  let svg_title = svg.append('text')
+    .text('US energy usage in ')
+    .attr('text-anchor', 'end')
+    .attr('x', ELEC_BOX[0] - 5)
+    .attr('y', '1.2em')
+    .attr('class', 'title');
+
+  svg_title.append('tspan')
+    .text('(Watts per capita)')
+    .attr('text-anchor', 'end')
+    .attr('x', ELEC_BOX[0] - 7)
+    .attr('dy', '1.2em')
+    .attr('class', 'unit');
+
+  svg_title.append('tspan')
     .text(DATA[0].year)
+    .attr('text-anchor', 'start')
+    .attr('x', ELEC_BOX[0])
+    .attr('dy', '0em')
+    .attr('class', 'year')
+
 };
 
 /**
@@ -83,19 +105,18 @@ let draw_boxes_right = function draw_boxes_right(svg, totals, boxtops) {
       .append('tspan')
       .text(function() { if (box.box === 'res') { return '/Commercial'; } })
       .attr('x', x)
-      .attr('y', y - 5)
       .attr('dy', function() {
-        if (box.box === 'res') { return '-.8em'; }
+        if (box.box === 'res') { return '1em'; }
         return 0; })
       /**
        * Add numeric totals to output boxes
        */
       .append('tspan')
-      .attr('class', 'total sector ')
+      .attr('class', 'total sector '+box.box)
       .attr('data-sector', box.box)
       .text(sigfig2(totals[box.box]))
       .attr('x', x)
-      .attr('y', y - 5);
+      .attr('dy', '1.2em');
   });
 };
 

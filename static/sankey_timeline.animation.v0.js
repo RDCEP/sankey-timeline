@@ -16,9 +16,7 @@ const build_animation = function build_animation(graphs, summary) {
         .transition(t)
         .attr('d', line(parse_line(g)))
         .attr('stroke-width', function() {
-          if (g.stroke > 0) {
-            return g.stroke+BLEED;
-          }
+          if (g.stroke > 0) { return g.stroke+BLEED; }
           return 0;
         })
     });
@@ -44,7 +42,9 @@ const build_animation = function build_animation(graphs, summary) {
           }
           return height;
         });
-
+      /**
+       * Hide empty flows and adjust flows' vertical positions
+       */
       d3.select('.label.'+FUELS[j].fuel)
         .classed('hidden', function() {
           return summary.totals[i][FUELS[j].fuel] === 0;
@@ -54,6 +54,9 @@ const build_animation = function build_animation(graphs, summary) {
       top += height + LEFT_GAP;
     }
 
+    /**
+     * Update electricity
+     */
     let elec_total = summary.totals[i].elec;
     d3.select('.box.elec')
       .transition(t)
@@ -63,9 +66,6 @@ const build_animation = function build_animation(graphs, summary) {
       .classed('hidden', function() {
         return elec_total === 0;
       })
-      .transition(t)
-      .attr('y', ELEC_BOX[1] - elec_total * SCALE - 5);
-    d3.select('.total')
       .transition(t)
       .attr('y', ELEC_BOX[1] - elec_total * SCALE - 5);
 
@@ -80,6 +80,9 @@ const build_animation = function build_animation(graphs, summary) {
         .attr('height', height);
     }
 
+    /**
+     * Update year
+     */
     d3.select('.year')
       .transition(t)
       .tween('text', function() {
@@ -91,11 +94,13 @@ const build_animation = function build_animation(graphs, summary) {
         };
       });
 
+    /**
+     * Update totals
+     */
     d3.selectAll('.total.sector')
       .transition(t)
       .tween('text', function() {
         let that = this;
-        console.log(graphs[i].totals[that.getAttribute('data-sector')]);
         let a = parseInt(that.textContent);
         let b = graphs[i].totals[that.getAttribute('data-sector')];
         return function(t) {
