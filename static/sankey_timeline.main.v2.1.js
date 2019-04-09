@@ -1,13 +1,20 @@
 (function() {
   'use strict';
 
-  // const k = DATA.length - 10;
-  const k = 0;
+  let state = false;
+
+  // Sort data chronologically
+  DATA.sort(function(a, b) {
+    return a.year - b.year;
+  });
+
 
   let svg = d3.select('.sankey.container')
     .append('svg')
     .attr('width', WIDTH)
     .attr('height', HEIGHT);
+
+  draw_title(svg);
 
   // Add layers for fuels
   for (let i = 0; i < FUELS.length; ++i) {
@@ -16,57 +23,52 @@
   }
   svg.append('g').attr('class', 'fuel elec');
 
-  // Sort data chronologically
-  DATA.sort(function(a, b) {
-    return a.year - b.year;
-  });
-  // DATA = DATA.slice(-1, );
+  let graph_nest = {strokes: {}, tops: {}, heights: {}};
 
-  // Summary information
-  let summary = get_summary();
+  for (let i = 0; i < graphs.length; ++i) {
+    let top = TOP_Y;
+    let y = graphs[i].year;
+    graph_nest.strokes[y] = {};
+    graph_nest.tops[y] = {};
+    graph_nest.heights[y] = {};
+    for (let j = 0; j < FUELS.length; ++j) {
+      let f = FUELS[j].fuel;
 
-  // Build graph object with xy-coords for nodes
-  let graphs = build_all_graphs(summary);
+      graph_nest.strokes[y][f] = {};
 
-  // Draw contents of graph object
-  // Loop through fuel objects in graph object
-  for (let i = 0; i < graphs[k].graph.length; ++i) {
-    // Loop through boxes
-    // Suppress paths without nodes FIXME: this is only for testing
-    if (graphs[k].graph[i].b.x === null) {
-      continue;
+      if (f !== 'elec') {
+        graph_nest.tops[y][f] = top;
+        top += summary.totals[i][f] * SCALE + LEFT_GAP;
+      } else {
+        graph_nest.tops[y][f] = ELEC_BOX[1] - summary.totals[i].elec * SCALE;
+      }
+
+      for (let k = 0; k < BOXES.length; ++k) {
+        let b = BOXES[k].box;
+
+        graph_nest.heights[y][b] = summary.totals[i][b] * SCALE;
+
+        let s =
+          graphs[i].graph.filter(function(d) {
+            return d.fuel === f;
+          })
+          .filter(function(d) {
+            return d.box === b;
+          })[0];
+        if (!(s === undefined || s === null)) {
+          graph_nest.strokes[y][f][b] = s.stroke;
+        }
+      }
     }
-    // Set line styles
-    svg.select('.fuel.'+graphs[k].graph[i].fuel)
-      .append('path')
-      .attr('d', line(parse_line(graphs[k].graph[i])))
-      .attr('stroke-width', function() {
-          if (graphs[k].graph[i].stroke > 0) {
-            return graphs[k].graph[i].stroke+BLEED;
-          }
-          return 0;
-        })
-      .attr('class', 'flow '+graphs[k].graph[i].fuel+' '+graphs[k].graph[i].box)
   }
 
-  draw_boxes_left(svg, graphs[k].totals);
-  draw_boxes_right(svg, graphs[k].totals, summary.box_tops);
+  state = draw_initial_graph(svg);
 
-  svg = d3.select('.title.container')
-    .style('width', WIDTH+'px')
-    .style('height', 50+'px')
-    .append('svg')
-    .attr('width', WIDTH)
-    .attr('height', 50);
+  // build_animation(graphs, summary, svg); // v0
+  build_animation(graphs, graph_nest, summary, svg);  // v1
 
-
-
-  draw_title(svg);
-
-  build_animation(graphs, summary);
-
-  console.log(graphs);
-  // console.log(summary);
-  // console.log(build_graphs(summary));
+  console.log(graph_nest);
+  // console.log(graphs);
+  console.log(summary);
 
 })();

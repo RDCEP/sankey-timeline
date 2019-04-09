@@ -46,6 +46,10 @@ text {
 .box.petro {
   fill: #095f0b; }
 
+.maxline {
+  stroke: #cccccc;
+  stroke-width: 1px; }
+
 .bkgd {
   fill: #000000; }
 

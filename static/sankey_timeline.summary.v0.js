@@ -6,7 +6,8 @@
  * `maxes` are the maximum totals for each box over time.
  * `box_tops` are the y-coord placement of the boxes on the right
  *     side of the graph.
- * @returns {{flows: Array, totals: Array, maxes: {}, box_tops: {}}}
+ * @returns {{flows: Array, totals: Array, maxes: {}, box_tops: {},
+ *            labels: Array}}
  */
 const get_summary = function get_summary() {
 
@@ -14,6 +15,7 @@ const get_summary = function get_summary() {
   let _tf = get_totals();
   summary.totals = _tf[0];
   summary.maxes = _tf[1];
+  summary.labels = _tf[2];
   summary.maxes = get_maxes(summary);
   summary.box_tops = get_box_tops(summary);
   return summary;
@@ -29,8 +31,9 @@ const get_summary = function get_summary() {
 const get_totals = function get_totals() {
 
   let totals = [];
-
   let flows = [];
+  let labels = [];
+  let y = 0;
 
   // Loop through years
   for (let i = 0; i < DATA.length; ++i) {
@@ -38,6 +41,10 @@ const get_totals = function get_totals() {
       elec: 0, res: 0, ag: 0, indus: 0, trans: 0,
       solar: 0, nuclear: 0, hydro: 0, wind: 0, geo: 0,
       gas: 0, coal: 0, bio: 0, petro: 0, fuel_height: 0 };
+    let label = { year: DATA[i].year,
+      elec: ELEC_BOX[1], res: 0, ag: 0, indus: 0, trans: 0,
+      solar: 0, nuclear: 0, hydro: 0, wind: 0, geo: 0,
+      gas: 0, coal: 0, bio: 0, petro: 0 };
     let flow = { year: DATA[i].year,
       elec: 0, res: 0, ag: 0, indus: 0, trans: 0 };
     // Loop through fuels
@@ -58,12 +65,18 @@ const get_totals = function get_totals() {
             total[BOX_NAMES[k]] += DATA[i].elec[BOX_NAMES[k]];
           }
       }
+
+      label[fuel_name] = TOP_Y + total.fuel_height - 5;
+      label.elec = ELEC_BOX[1] - total.elec * SCALE;
       total.fuel_height += total[fuel_name] * SCALE + LEFT_GAP;
+
     }
+
     totals.push(total);
     flows.push(flow);
+    labels.push(label);
   }
-  return [totals, flows];
+  return [totals, flows, labels];
 };
 
 /**
@@ -101,3 +114,8 @@ const get_box_tops = function get_box_tops(summary) {
   return box_tops;
 };
 
+// Summary information
+let summary = get_summary();
+
+// Build graph object with xy-coords for nodes
+let graphs = build_all_graphs(summary);
