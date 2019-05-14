@@ -1,10 +1,14 @@
 const build_animation = function build_animation(graphs, graph_nest, summary, svg) {
   let i = 1;
   let years = Object.keys(graph_nest.strokes).sort().map(Number);
-  let n = years[i] - years[i-1];
-  let d = n * SPEED;
+  console.log(years);
 
   function animate_period() {
+
+    let n = years[i] - years[i-1];
+    let duration = n * SPEED;
+    console.log(years[i], years[i-1], duration);
+
     svg.selectAll('.label')
       .classed('hidden', function() {
         let d = d3.select(this);
@@ -16,11 +20,14 @@ const build_animation = function build_animation(graphs, graph_nest, summary, sv
       });
     d3.selectAll('.animate')
       .transition()
-      .duration(d)
+      .duration(duration)
       .ease(d3.easeLinear)
       .on('start', function() {
         let d = d3.select(this);
         d3.active(this)
+          /*
+           Update flows' geometry
+           */
           .attr('d', function() {
             if (d.classed('flow')) {
               let l = graphs[i].graph.filter(function(e) {
@@ -31,6 +38,9 @@ const build_animation = function build_animation(graphs, graph_nest, summary, sv
               return line(parse_line(l));
             }
           })
+          /*
+           Update flows' stroke width
+           */
           .attr('stroke-width', function() {
             if (d.classed('flow')) {
               let s = graph_nest.strokes[years[i]][d.attr('data-fuel')][d.attr('data-sector')];
@@ -41,15 +51,24 @@ const build_animation = function build_animation(graphs, graph_nest, summary, sv
             }
           })
           .attr('y', function() {
+            /*
+             Update fuel box y-coordinate
+             */
             if (d.classed('box') && d.classed('fuel')) {
               return graph_nest.tops[years[i]][d.attr('data-fuel')];
             }
+            /*
+             Update fuel box label y-coordinate
+             */
             else if (d.classed('label') && d.classed('fuel')) {
               return graph_nest.tops[years[i]][d.attr('data-fuel')] - 5;
             }
             return d.attr('y');
           })
           .attr('height', function() {
+            /*
+             Update sector box height
+             */
             if (d.classed('box') && d.classed('sector')) {
               return graph_nest.heights[years[i]][d.attr('data-sector')];
             }
@@ -57,6 +76,9 @@ const build_animation = function build_animation(graphs, graph_nest, summary, sv
           })
           .tween('text', function() {
             let that = this;
+            /*
+             Update year
+             */
             if (d.classed('year')) {
               let a = parseInt(that.textContent);
               let b = years[i];
@@ -65,6 +87,9 @@ const build_animation = function build_animation(graphs, graph_nest, summary, sv
                 that.setAttribute('data-value', v);
                 that.textContent = Math.round(v);
               };
+            /*
+             Update sector total
+             */
             } else if (d.classed('total')) {
               let a = parseFloat(that.getAttribute('data-value'));
               let b = graphs[i].totals[that.getAttribute('data-sector')];
@@ -74,15 +99,14 @@ const build_animation = function build_animation(graphs, graph_nest, summary, sv
                 that.textContent = sigfig2(v);
               };
             }
-            // return d.attr('text');
 
           });
       });
 
     i++;
 
-    if (i < graphs.length) {
-      setTimeout(animate_period, d);
+    if (i < graphs.length - 1) {
+      setTimeout(animate_period, duration);
     }
 
   }
