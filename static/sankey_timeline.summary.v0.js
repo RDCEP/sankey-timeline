@@ -11,7 +11,9 @@
  */
 const get_summary = function get_summary() {
 
-  let summary = {totals: [], flows: [], maxes: {}, box_tops: {}}
+  // TODO: summary.labels is not used. Remove it.
+
+  let summary = {totals: [], flows: [], maxes: {}, box_tops: {}};
   let _tf = get_totals();
   summary.totals = _tf[0];
   summary.maxes = _tf[1];
@@ -76,7 +78,7 @@ const get_totals = function get_totals() {
     flows.push(flow);
     labels.push(label);
   }
-  return [totals, flows, labels];
+  return [totals, flows, labels, ];
 };
 
 /**
@@ -112,6 +114,7 @@ const get_box_tops = function get_box_tops(summary) {
   box_tops.trans = box_tops.indus + summary.maxes.indus * SCALE + RIGHT_GAP;
 
   return box_tops;
+
 };
 
 // Summary information

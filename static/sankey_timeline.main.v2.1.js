@@ -23,7 +23,10 @@
   }
   svg.append('g').attr('class', 'fuel elec');
 
-  let graph_nest = {strokes: {}, tops: {}, heights: {}};
+  /*
+   Build nested graph object
+   */
+  let graph_nest = {strokes: {}, tops: {}, heights: {}, waste: {}};
 
   for (let i = 0; i < graphs.length; ++i) {
     let top = TOP_Y;
@@ -31,6 +34,8 @@
     graph_nest.strokes[y] = {};
     graph_nest.tops[y] = {};
     graph_nest.heights[y] = {};
+    graph_nest.waste[y] = {};
+
     for (let j = 0; j < FUELS.length; ++j) {
       let f = FUELS[j].fuel;
 
@@ -45,6 +50,10 @@
 
       for (let k = 0; k < BOXES.length; ++k) {
         let b = BOXES[k].box;
+
+        if (b !== 'elec') {
+          graph_nest.waste[y][b] = DATA[i].waste[b];
+        }
 
         graph_nest.heights[y][b] = summary.totals[i][b] * SCALE;
 
@@ -62,13 +71,13 @@
     }
   }
 
-  state = draw_initial_graph(svg);
+  state = draw_initial_graph(svg, graph_nest);
 
   // build_animation(graphs, summary, svg); // v0
   build_animation(graphs, graph_nest, summary, svg);  // v1
 
   console.log(graph_nest);
-  // console.log(graphs);
+  console.log(graphs);
   console.log(summary);
 
 })();

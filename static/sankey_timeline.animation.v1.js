@@ -81,10 +81,21 @@ const build_animation = function build_animation(graphs, graph_nest, summary, sv
             if (d.classed('year')) {
               let a = parseInt(that.textContent);
               let b = years[i];
-              return function(t) {
+              return function (t) {
                 let v = a + (b - a) * t;
                 that.setAttribute('data-value', v);
                 that.textContent = Math.round(v);
+              };
+            /**
+             * Update sector waste
+             */
+            } else if (d.classed('waste')) {
+              let a = parseFloat(that.getAttribute('data-value'));
+              let b = graph_nest.waste[years[i]][that.getAttribute('data-sector')];
+              return function(t) {
+                let v = a + (b - a) * t;
+                that.setAttribute('data-value', v);
+                that.textContent = sigfig2(v);
               };
             /*
              Update sector total

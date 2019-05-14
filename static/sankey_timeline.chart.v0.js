@@ -93,9 +93,10 @@ let draw_boxes_left = function draw_boxes_left(svg, totals) {
  * Draw initial output boxes on right side of chart at first timestep.
  * @param svg
  * @param totals
+ * @param graph_nest
  * @param boxtops
  */
-let draw_boxes_right = function draw_boxes_right(svg, totals, boxtops, maxes) {
+let draw_boxes_right = function draw_boxes_right(svg, totals, graph_nest, boxtops) {
   BOXES.forEach(function(box) {
     let x = WIDTH - BOX_WIDTH;
     let y = boxtops[box.box];
@@ -173,14 +174,19 @@ let draw_boxes_right = function draw_boxes_right(svg, totals, boxtops, maxes) {
     /**
      * Add waste totals to output boxes
      */
-    // text.append('tspan')
-    //   .attr('class', 'total sector animate '+box.box)
-    //   .attr('data-sector', box.box)
-    //   .attr('data-value', totals[box.box])
-    //   .text(sigfig2(totals[box.box]))
-    //   .attr('x', x)
-    //   .attr('dy', '1.2em')
-    //   .attr('data-incr', 0);
+    if (box.box !== 'elec') {
+      text.append('tspan')
+        .attr('class', 'total waste sector animate ' + box.box)
+        .attr('data-sector', box.box)
+        .attr('data-value', graph_nest.waste[1800][box.box])
+        .text(sigfig2(graph_nest.waste[1800][box.box]))
+        .attr('data-value', 0)
+        .text(sigfig2(0))
+        .attr('x', x + BOX_WIDTH)
+        .attr('dy', 0)
+        .attr('text-anchor', 'end')
+        .attr('data-incr', 0);
+    }
   });
 };
 
@@ -210,11 +216,12 @@ const draw_flows = function draw_flows(svg, k) {
   }
 };
 
-const draw_initial_graph = function draw_initial_graph(svg) {
+const draw_initial_graph = function draw_initial_graph(svg, graph_nest) {
   const k = 0;
   draw_flows(svg, k);
   draw_boxes_left(svg, graphs[k].totals);
-  draw_boxes_right(svg, graphs[k].totals, summary.box_tops, summary.maxes);
+  draw_boxes_right(svg, graphs[k].totals, graph_nest,
+    summary.box_tops, summary.maxes);
   return true;
 };
 
