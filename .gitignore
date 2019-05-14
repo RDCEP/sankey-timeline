@@ -197,3 +197,6 @@ Supprimerait .idea/sankey-timeline.iml
 Supprimerait .idea/watcherTasks.xml
 Supprimerait parse/data/For Nate 2.3.xlsx
 Supprimerait parse/sankey_timeline.data.v3.json
+
+.idea
+color_shit
