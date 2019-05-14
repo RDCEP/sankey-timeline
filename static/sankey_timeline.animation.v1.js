@@ -7,7 +7,6 @@ const build_animation = function build_animation(graphs, graph_nest, summary, sv
 
     let n = years[i] - years[i-1];
     let duration = n * SPEED;
-    console.log(years[i], years[i-1], duration);
 
     svg.selectAll('.label')
       .classed('hidden', function() {
