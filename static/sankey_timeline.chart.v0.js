@@ -129,7 +129,7 @@ let draw_boxes_right = function draw_boxes_right(svg, totals, boxtops, maxes) {
     //   .attr('y2', y12)
     //   .attr('class', 'maxline');
 
-    svg.append('text')
+    let text = svg.append('text')
       .text(function() {
         if (box.box === 'res') { return 'Residential'; }
         return box.name; })
@@ -147,19 +147,21 @@ let draw_boxes_right = function draw_boxes_right(svg, totals, boxtops, maxes) {
       .attr('class', 'label sector animate '+box.box)
       .classed('hidden', function() { return totals[box.box] === 0; })
       .classed('fuel', function() { return box.box === 'elec'; })
-
-
-      .append('tspan')
+    ;
+    /**
+     * Add /Commercial to residential box
+     */
+    text.append('tspan')
       .text(function() { if (box.box === 'res') { return '/Commercial'; } })
       .attr('x', x)
       .attr('dy', function() {
         if (box.box === 'res') { return '1em'; }
         return 0; })
-      .attr('data-incr', 0)
-      /**
-       * Add numeric totals to output boxes
-       */
-      .append('tspan')
+      .attr('data-incr', 0);
+    /**
+     * Add numeric totals to output boxes
+     */
+    text.append('tspan')
       .attr('class', 'total sector animate '+box.box)
       .attr('data-sector', box.box)
       .attr('data-value', totals[box.box])
@@ -167,6 +169,18 @@ let draw_boxes_right = function draw_boxes_right(svg, totals, boxtops, maxes) {
       .attr('x', x)
       .attr('dy', '1.2em')
       .attr('data-incr', 0);
+
+    /**
+     * Add waste totals to output boxes
+     */
+    // text.append('tspan')
+    //   .attr('class', 'total sector animate '+box.box)
+    //   .attr('data-sector', box.box)
+    //   .attr('data-value', totals[box.box])
+    //   .text(sigfig2(totals[box.box]))
+    //   .attr('x', x)
+    //   .attr('dy', '1.2em')
+    //   .attr('data-incr', 0);
   });
 };
 
